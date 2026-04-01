@@ -1,15 +1,17 @@
 # Dotfiles
 
-Personal macOS development environment configuration. Manages Neovim, Zsh, Tmux, and Ghostty configs via manual symlinks from this repo to their expected locations.
+Personal macOS development environment configuration. Manages Neovim, Zsh, Tmux, Ghostty, uv, and npm configs via manual symlinks from this repo to their expected locations.
 
 ## Architecture
 
 ```
 dotfiles/
-├── nvim/       → ~/.config/nvim (symlink)     # Neovim - kickstart.nvim based, Lua config
-├── tmux/       → ~/.tmux.conf (symlink)       # Tmux multiplexer
 ├── ghostty/    → ~/.config/ghostty (symlink)   # Ghostty terminal
-└── zsh/        → NOT symlinked                 # Zsh shell (repo is subset of ~/.zshrc)
+├── npm/        → ~/.npmrc (symlink)            # npm config (auth token via $GITHUB_NPM_TOKEN env var)
+├── nvim/       → ~/.config/nvim (symlink)      # Neovim - kickstart.nvim based, Lua config
+├── tmux/       → ~/.tmux.conf (symlink)        # Tmux multiplexer
+├── uv/         → ~/.config/uv/uv.toml (symlink) # uv Python package manager
+└── zsh/        → ~/.zshrc (symlink)            # Zsh shell config
 ```
 
 Each tool directory mirrors the target filesystem layout. Configs are deployed via manual symlinks — no stow or install script.
@@ -19,9 +21,11 @@ Each tool directory mirrors the target filesystem layout. Configs are deployed v
 | File | Purpose | Lines |
 |------|---------|-------|
 | `nvim/.config/nvim/init.lua` | Main Neovim config — options, keymaps, 22 plugins via lazy.nvim | 1,018 |
-| `zsh/.zshrc` | Shell functions, aliases, Claude Code provider config | 63 |
+| `zsh/.zshrc` | Shell functions, aliases, Claude Code provider config | 65 |
 | `tmux/.tmux.conf` | Status bar theme, mouse, Alt-j/k window nav | 25 |
 | `ghostty/.config/ghostty/config` | Font config (JetBrainsMono Nerd Font) | 49 |
+| `npm/.npmrc` | npm registry config, GitHub Packages auth via env var | 2 |
+| `uv/uv.toml` | uv global settings (required-version, exclude-newer) | 2 |
 
 ## Neovim Setup
 
@@ -35,16 +39,17 @@ Each tool directory mirrors the target filesystem layout. Configs are deployed v
 
 ## Zsh Config
 
-The repo version (`zsh/.zshrc`) is a **subset** of the active `~/.zshrc`. The repo tracks custom content (functions, aliases, Claude Code config). The live file has additional PATH/NVM/gcloud lines added by installers.
+The repo `zsh/.zshrc` is symlinked to `~/.zshrc`. Secrets are stored in `~/.zshrc.secrets` (not tracked) and sourced at shell startup.
 
 Key content:
-- `compare-worktrees()` — opens git worktrees in Cursor workspace
 - `kill_port()` — kill processes on a port
 - Claude Code provider switching (vertex/bedrock/anthropic)
+- PATH setup for nvm, yarn, homebrew, pixi, gcloud
 
 ## Important Notes
 
 - No install script — symlinks are created manually
+- Secrets live in `~/.zshrc.secrets` (not tracked) — referenced via env vars (e.g., `$GITHUB_NPM_TOKEN` in `.npmrc`)
 - No tests or CI for the dotfiles repo itself
 - The `.github/workflows/stylua.yml` is inherited from kickstart.nvim and does not run on this repo
 - Ghostty config is minimal (only font-family set)
@@ -54,7 +59,7 @@ Key content:
 
 ```bash
 # Check symlink state
-ls -la ~/.config/nvim ~/.tmux.conf ~/.config/ghostty/config ~/.zshrc
+ls -la ~/.config/nvim ~/.tmux.conf ~/.config/ghostty/config ~/.zshrc ~/.npmrc ~/.config/uv/uv.toml
 
 # Update Neovim plugins
 nvim --headless "+Lazy! sync" +qa

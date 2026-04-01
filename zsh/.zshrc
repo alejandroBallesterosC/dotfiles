@@ -1,22 +1,21 @@
-# Open all git worktrees in a single Cursor workspace
-compare-worktrees() {
-  local repo_root=$(git rev-parse --git-common-dir 2>/dev/null | xargs dirname)
-  local repo_name=$(basename "$repo_root")
-  local workspace_file="/tmp/${repo_name}-worktrees.code-workspace"
-  
-  # Generate workspace JSON
-  local folders=$(git worktree list --porcelain | grep "^worktree" | sed 's/^worktree //' | \
-    awk 'BEGIN{first=1} {if(!first)printf ","; first=0; printf "\n    { \"path\": \"%s\" }", $0}')
-  
-  echo "{
-  \"folders\": [$folders
-  ]
-}" > "$workspace_file"
-  
-  cursor --new-window "$workspace_file"
-}
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# Script for killing all processes on a port
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+# Homebrew SQLite (with extension loading enabled)
+export PATH="/opt/homebrew/opt/sqlite/bin:$PATH"
+export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"
+export JAVA_HOME="/opt/homebrew/opt/openjdk@11/libexec/openjdk.jdk/Contents/Home"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.pixi/bin:$PATH"
+
+# Dont want to auto update homebrew so I can update to releases used for atleast seven days by the community to avoid prompt injection or exfiltration hack attempts
+export HOMEBREW_NO_AUTO_UPDATE=1
+
+[ -f "$HOME/.zshrc.secrets" ] && source "$HOME/.zshrc.secrets"
+
 kill_port() {
   if [ -z "$1" ]; then
     echo "Usage: kill_port <port>"
@@ -25,11 +24,13 @@ kill_port() {
   lsof -ti:$1 | xargs kill -9 2>/dev/null && echo "Killed processes on port $1" || echo "No processes found on port $1"
 }
 
-# Sublime Alias
 alias sublime="subl"
-
-# Claude Code Skip Perms Alias
 alias clauded='claude --dangerously-skip-permissions'
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
+# The next line enables shell command completion for gcloud.
+if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc" ; fi
 
 # ── Claude Code Provider Config ──────────────────────────────────────
 # Set to "vertex" or "bedrock" or "anthropic"
