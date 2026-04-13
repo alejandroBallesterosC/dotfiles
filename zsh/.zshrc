@@ -38,7 +38,7 @@ CLAUDE_PROVIDER="vertex"
 
 # Vertex AI settings
 export GOOGLE_APPLICATION_CREDENTIALS="$HOME/.config/gcloud/claude-vertex-key.json"
-export CLOUD_ML_REGION=us-east5 #global
+export CLOUD_ML_REGION=global #us-east5
 export ANTHROPIC_VERTEX_PROJECT_ID=oleum-claude-code
 # AWS settings
 export AWS_REGION="us-east-1"
@@ -46,19 +46,22 @@ export AWS_REGION="us-east-1"
 if [[ "$CLAUDE_PROVIDER" == "vertex" ]]; then
   export CLAUDE_CODE_USE_VERTEX=1
   unset CLAUDE_CODE_USE_BEDROCK
-  export ANTHROPIC_DEFAULT_SONNET_MODEL="claude-sonnet-4-6"
-  export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-opus-4-6"
-  export ANTHROPIC_SMALL_FAST_MODEL="claude-haiku-4-5@20251001"
+  export ANTHROPIC_DEFAULT_SONNET_MODEL="claude-sonnet-4-6[1m]"
+  export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-opus-4-6[1m]"
+  # export ANTHROPIC_SMALL_FAST_MODEL="claude-haiku-4-5@20251001"
+  export ANTHROPIC_DEFAULT_HAIKU_MODEL="claude-haiku-4-5@20251001"
 elif [[ "$CLAUDE_PROVIDER" == "bedrock" ]]; then
   export CLAUDE_CODE_USE_BEDROCK=1
   unset CLAUDE_CODE_USE_VERTEX
-  export ANTHROPIC_DEFAULT_SONNET_MODEL="us.anthropic.claude-sonnet-4-6"
-  export ANTHROPIC_DEFAULT_OPUS_MODEL="us.anthropic.claude-opus-4-6-v1"
-  export ANTHROPIC_SMALL_FAST_MODEL="us.anthropic.claude-haiku-4-5-20251001-v1:0"
+  # General-purpose recommendation: Bedrock global inference profiles.
+  # If you require US-only routing, replace global. with us.
+  export ANTHROPIC_DEFAULT_SONNET_MODEL="global.anthropic.claude-sonnet-4-6[1m]"
+  export ANTHROPIC_DEFAULT_OPUS_MODEL="global.anthropic.claude-opus-4-6-v1[1m]"
+  export ANTHROPIC_DEFAULT_HAIKU_MODEL="global.anthropic.claude-haiku-4-5-20251001-v1:0"
 elif [[ "$CLAUDE_PROVIDER" == "anthropic" ]]; then
   unset CLAUDE_CODE_USE_VERTEX
   unset CLAUDE_CODE_USE_BEDROCK
-  export ANTHROPIC_DEFAULT_SONNET_MODEL="claude-sonnet-4-6"
-  export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-opus-4-6"
+  export ANTHROPIC_DEFAULT_SONNET_MODEL="claude-sonnet-4-6[1m]"
+  export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-opus-4-6[1m]"
   export ANTHROPIC_DEFAULT_HAIKU_MODEL="claude-haiku-4-5-20251001"
 fi
