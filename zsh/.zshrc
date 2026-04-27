@@ -8,8 +8,6 @@ export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"
 export JAVA_HOME="/opt/homebrew/opt/openjdk@11/libexec/openjdk.jdk/Contents/Home"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.pixi/bin:$PATH"
-# Add Npm Global Bin to PATH
-export PATH="$HOME/.npm-global/bin:$PATH"
 
 # Dont want to auto update homebrew so I can update to releases used for atleast seven days by the community to avoid prompt injection or exfiltration hack attempts
 export HOMEBREW_NO_AUTO_UPDATE=1
@@ -47,8 +45,8 @@ if [[ "$CLAUDE_PROVIDER" == "vertex" ]]; then
   export CLAUDE_CODE_USE_VERTEX=1
   unset CLAUDE_CODE_USE_BEDROCK
   export ANTHROPIC_DEFAULT_SONNET_MODEL="claude-sonnet-4-6[1m]"
+  # export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-opus-4-7[1m]"
   export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-opus-4-6[1m]"
-  # export ANTHROPIC_SMALL_FAST_MODEL="claude-haiku-4-5@20251001"
   export ANTHROPIC_DEFAULT_HAIKU_MODEL="claude-haiku-4-5@20251001"
 elif [[ "$CLAUDE_PROVIDER" == "bedrock" ]]; then
   export CLAUDE_CODE_USE_BEDROCK=1
@@ -56,12 +54,14 @@ elif [[ "$CLAUDE_PROVIDER" == "bedrock" ]]; then
   # General-purpose recommendation: Bedrock global inference profiles.
   # If you require US-only routing, replace global. with us.
   export ANTHROPIC_DEFAULT_SONNET_MODEL="global.anthropic.claude-sonnet-4-6[1m]"
+  # export ANTHROPIC_DEFAULT_OPUS_MODEL="global.anthropic.claude-opus-4-7[1m]"
   export ANTHROPIC_DEFAULT_OPUS_MODEL="global.anthropic.claude-opus-4-6-v1[1m]"
   export ANTHROPIC_DEFAULT_HAIKU_MODEL="global.anthropic.claude-haiku-4-5-20251001-v1:0"
 elif [[ "$CLAUDE_PROVIDER" == "anthropic" ]]; then
   unset CLAUDE_CODE_USE_VERTEX
   unset CLAUDE_CODE_USE_BEDROCK
   export ANTHROPIC_DEFAULT_SONNET_MODEL="claude-sonnet-4-6[1m]"
+  # export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-opus-4-7[1m]"
   export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-opus-4-6[1m]"
   export ANTHROPIC_DEFAULT_HAIKU_MODEL="claude-haiku-4-5-20251001"
 fi

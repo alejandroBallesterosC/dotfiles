@@ -47,3 +47,4 @@
 # resize-overlay-duration = 4s 200ms
 
 font-family = JetBrainsMono Nerd Font
+bell-features = system,attention,title,border
