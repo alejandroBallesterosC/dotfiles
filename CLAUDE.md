@@ -21,7 +21,7 @@ Each tool directory mirrors the target filesystem layout. Configs are deployed v
 | File | Purpose | Lines |
 |------|---------|-------|
 | `nvim/.config/nvim/init.lua` | Main Neovim config — options, keymaps, 22 plugins via lazy.nvim | 1,018 |
-| `zsh/.zshrc` | Shell functions, aliases, Claude Code provider config | 65 |
+| `zsh/.zshrc` | Shell functions, aliases, Claude Code provider config | 80 |
 | `tmux/.tmux.conf` | Status bar theme, mouse, Alt-j/k window nav | 25 |
 | `ghostty/.config/ghostty/config` | Font config (JetBrainsMono Nerd Font) | 49 |
 | `npm/.npmrc` | npm registry config, GitHub Packages auth via env var | 2 |
@@ -43,8 +43,9 @@ The repo `zsh/.zshrc` is symlinked to `~/.zshrc`. Secrets are stored in `~/.zshr
 
 Key content:
 - `kill_port()` — kill processes on a port
+- `mmsync()` — rsync wrapper that bypasses SSH RemoteCommand
 - Claude Code provider switching (vertex/bedrock/anthropic)
-- PATH setup for nvm, yarn, homebrew, pixi, gcloud
+- PATH setup for nvm, homebrew sqlite/openjdk, pixi, gcloud, windsurf
 
 ## Important Notes
 

@@ -57,6 +57,6 @@ Custom plugins can be added in `nvim/.config/nvim/lua/custom/plugins/`.
 
 ## Zsh Highlights
 
-- `compare-worktrees` — opens all git worktrees in a Cursor workspace
 - `kill_port <port>` — kills processes on a given port
+- `mmsync` — rsync wrapper that bypasses SSH RemoteCommand
 - Claude Code provider switching (Vertex AI / Bedrock / Anthropic)
