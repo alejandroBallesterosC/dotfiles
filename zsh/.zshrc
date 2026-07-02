@@ -1,3 +1,17 @@
+# Prompt: bold green user@host, bold blue path, matching Ubuntu's default bash PS1,
+# plus git branch/status via zsh's built-in vcs_info (dirty files shown in red, staged in yellow)
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:git:*' stagedstr ' %F{yellow}●%f'
+zstyle ':vcs_info:git:*' unstagedstr ' %F{red}●%f'
+zstyle ':vcs_info:git:*' formats ' %F{magenta}(%b%u%c)%f'
+zstyle ':vcs_info:git:*' actionformats ' %F{magenta}(%b|%a%u%c)%f'
+precmd_functions+=(vcs_info)
+
+setopt PROMPT_SUBST
+PROMPT='%B%F{green}%n@%m%f%b:%B%F{blue}%~%f%b${vcs_info_msg_0_}%# '
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
