@@ -57,42 +57,39 @@ if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-clou
 
 
 # ── Claude Code Provider Config ──────────────────────────────────────
-# Set to "vertex" or "bedrock" or "anthropic"
+# NOTE: CHANGE THIS to "vertex" or "bedrock" or "anthropic"
 CLAUDE_PROVIDER="bedrock"
-
 # Vertex AI settings
 export GOOGLE_APPLICATION_CREDENTIALS="$HOME/.config/gcloud/claude-vertex-key.json"
 export CLOUD_ML_REGION=global #us-east5
 export ANTHROPIC_VERTEX_PROJECT_ID=oleum-claude-code
 # AWS settings
 export AWS_REGION="us-east-1"
-
+# Set Default Models for each Provider
 if [[ "$CLAUDE_PROVIDER" == "vertex" ]]; then
   export CLAUDE_CODE_USE_VERTEX=1
   unset CLAUDE_CODE_USE_BEDROCK
   export ANTHROPIC_DEFAULT_HAIKU_MODEL="claude-haiku-4-5@20251001"
   export ANTHROPIC_DEFAULT_SONNET_MODEL="claude-sonnet-5[1m]"
-  export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-opus-4-8"
-  export ANTHROPIC_DEFAULT_FABLE_MODEL="claude-fable-5"
+  export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-opus-4-8[1m]"
+  export ANTHROPIC_DEFAULT_FABLE_MODEL="claude-fable-5[1m]"
 elif [[ "$CLAUDE_PROVIDER" == "bedrock" ]]; then
-  # General-purpose recommendation: Bedrock global inference profiles.
-  # If you require US-only routing, replace global. with us.
+  # General-purpose recommendation: Bedrock global inference profiles (higher throughput/availability)
+  # For US-only routing, replace 'global.anthropic..' with 'us.anthropic..'.
   export CLAUDE_CODE_USE_BEDROCK=1
   unset CLAUDE_CODE_USE_VERTEX
   export ANTHROPIC_DEFAULT_HAIKU_MODEL="global.anthropic.claude-haiku-4-5-20251001-v1:0"
   export ANTHROPIC_DEFAULT_SONNET_MODEL="global.anthropic.claude-sonnet-5[1m]"
-  export ANTHROPIC_DEFAULT_OPUS_MODEL="global.anthropic.claude-opus-4-8"
+  export ANTHROPIC_DEFAULT_OPUS_MODEL="global.anthropic.claude-opus-4-8[1m]"
   export ANTHROPIC_DEFAULT_FABLE_MODEL="global.anthropic.claude-fable-5[1m]"
 elif [[ "$CLAUDE_PROVIDER" == "anthropic" ]]; then
   unset CLAUDE_CODE_USE_VERTEX
   unset CLAUDE_CODE_USE_BEDROCK
   export ANTHROPIC_DEFAULT_HAIKU_MODEL="claude-haiku-4-5-20251001"
   export ANTHROPIC_DEFAULT_SONNET_MODEL="claude-sonnet-5[1m]"
-  export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-opus-4-8"
+  export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-opus-4-8[1m]"
+  export ANTHROPIC_DEFAULT_FABLE_MODEL="claude-fable-5[1m]"
 fi
-
-# Added by Devin
-export PATH="/Users/jandro/.codeium/windsurf/bin:$PATH"
 
 
 # ── Oleum Dev Box Helpers ──────────────────────────────────────
