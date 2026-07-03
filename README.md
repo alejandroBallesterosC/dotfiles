@@ -17,7 +17,7 @@ Personal macOS development environment configuration files, managed via manual s
 | **Zsh** | `zsh/` | `~/.zshrc` | Shell functions, aliases, git-aware prompt, and Claude Code provider configuration |
 | **npm** | `npm/` | `~/.npmrc` | GitHub Packages auth via `$GITHUB_NPM_TOKEN` env var, minimum release age guard |
 | **uv** | `uv/` | `~/.config/uv/uv.toml` | uv global settings (required version, exclude-newer) |
-| **Claude Code** | `claude-code/` | `~/.claude/settings.json`, `~/.claude/statusline.sh` | Settings (plugins, permissions, effort level) and a custom statusline: cwd, git branch, model, output style, context usage (with a fix for models where Claude Code under-reports the context window size) |
+| **Claude Code** | `claude-code/` | `~/.claude/{settings.json,statusline.sh,CLAUDE.md,docs,agents,skills}` | Settings, custom statusline, global instructions, and reference docs applied to every session |
 
 ## Setup
 
@@ -48,6 +48,10 @@ cat ~/dotfiles/zsh/.zshrc >> ~/.zshrc
 # Claude Code (settings.json contains the statusline wiring already)
 ln -s ~/dotfiles/claude-code/.claude/settings.json ~/.claude/settings.json
 ln -s ~/dotfiles/claude-code/.claude/statusline.sh ~/.claude/statusline.sh
+ln -s ~/dotfiles/claude-code/CLAUDE.md ~/.claude/CLAUDE.md
+ln -s ~/dotfiles/claude-code/docs ~/.claude/docs
+ln -s ~/dotfiles/claude-code/agents ~/.claude/agents
+ln -s ~/dotfiles/claude-code/skills ~/.claude/skills
 ```
 
 Neovim plugins and LSP servers install automatically on first launch via lazy.nvim and Mason.
@@ -93,3 +97,5 @@ Custom plugins can be added in `nvim/.config/nvim/lua/custom/plugins/` — note 
 - Statusline shows cwd, git branch, model, output style, and context window usage
 - Corrects context usage for models where Claude Code under-reports the context window size (see [anthropics/claude-code#63447](https://github.com/anthropics/claude-code/issues/63447))
 - `settings.json` holds enabled plugins, permissions, effort level, and notification channel — account-specific state (auth, session/usage data) lives elsewhere under `~/.claude/` and isn't tracked here
+- `CLAUDE.md` and `docs/` hold global instructions (writing style, TDD process, uv/Python conventions) applied to every session
+- `agents/` and `skills/` are tracked as empty placeholders (`.gitkeep`) — custom agents/skills live in a separate private repo

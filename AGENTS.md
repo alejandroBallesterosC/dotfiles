@@ -8,7 +8,7 @@ This file is the canonical reference for AI coding agents working in this repo (
 
 ```
 dotfiles/
-├── claude-code/ → ~/.claude/statusline.sh, ~/.claude/settings.json (symlinks)  # Claude Code statusline + settings
+├── claude-code/ → ~/.claude/{statusline.sh,settings.json,CLAUDE.md,docs,agents,skills} (symlinks)  # Claude Code global config
 ├── ghostty/    → ~/.config/ghostty (symlink)   # Ghostty terminal
 ├── npm/        → ~/.npmrc (symlink)            # npm config (auth token via $GITHUB_NPM_TOKEN env var)
 ├── nvim/       → ~/.config/nvim (symlink)      # Neovim - kickstart.nvim based, Lua config
@@ -31,6 +31,8 @@ Each tool directory mirrors the target filesystem layout. Configs are deployed v
 | `uv/uv.toml` | uv global settings (required-version, exclude-newer) | 2 |
 | `claude-code/.claude/statusline.sh` | Claude Code statusline: cwd, git branch, model, output style, context usage — corrects `context_window_size` for models Claude Code under-reports (see below) | 45 |
 | `claude-code/.claude/settings.json` | Claude Code settings: statusline wiring, enabled plugins, permissions, effort level, notification channel | 32 |
+| `claude-code/CLAUDE.md` | Global instructions applied to every Claude Code session (writing style, TDD process, uv/Python conventions) | 77 |
+| `claude-code/docs/*.md` | Referenced from `CLAUDE.md` — Python, uv, and Docker+uv best-practice docs | — |
 
 ## Neovim Setup
 
@@ -75,6 +77,10 @@ Key content:
 The statusline shows: current dir (`~` shortened), git branch, model display name, output style (if non-default), and context window usage (`ctx: N% (Nk left)`).
 
 Context usage is computed manually from `context_window.total_input_tokens` rather than trusting Claude Code's own `used_percentage`/`context_window_size` fields, because Claude Code (as of 2.1.200) under-reports `context_window_size` as 200000 for several models that actually run with a 1M window (Opus 4.6/4.7/4.8, Sonnet 4.6/5, Fable 5, Mythos 5) — see [anthropics/claude-code#63447](https://github.com/anthropics/claude-code/issues/63447). The script overrides the denominator to 1,000,000 for those models by matching `model.id`, but only when Claude Code's reported value is smaller, so the override becomes a no-op once upstream fixes the report.
+
+`claude-code/CLAUDE.md` and `claude-code/docs/` are symlinked to `~/.claude/CLAUDE.md` and `~/.claude/docs` — global instructions and reference docs applied to every Claude Code session, regardless of project.
+
+`claude-code/agents/` and `claude-code/skills/` are symlinked to `~/.claude/agents` and `~/.claude/skills`, kept intentionally empty (each holds only a `.gitkeep`) — custom agents/skills live in a separate private repo and are not synced here.
 
 ## Important Notes
 
