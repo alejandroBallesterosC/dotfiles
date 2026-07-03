@@ -55,6 +55,7 @@ if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/
 # The next line enables shell command completion for gcloud.
 if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc" ; fi
 
+
 # ── Claude Code Provider Config ──────────────────────────────────────
 # Set to "vertex" or "bedrock" or "anthropic"
 CLAUDE_PROVIDER="bedrock"
@@ -92,3 +93,24 @@ fi
 
 # Added by Devin
 export PATH="/Users/jandro/.codeium/windsurf/bin:$PATH"
+
+
+# ── Oleum Dev Box Helpers ──────────────────────────────────────
+# Stop for the day (keeps everything, no rebuild needed):
+# Compute billing stops; EBS storage (~$32/mo for 400GB) keeps billing.
+# Tailscale hostname (oleum-devbox) goes offline while stopped and reappears once restarted
+# no reconfiguration needed. Public IP will change on next start, but you don't rely on it.
+dev_stop() {
+  aws ec2 stop-instances --instance-ids i-0643e4deb2e1db7d0 --region us-east-1
+}
+
+# Start it back up:
+# Give it 30-60 seconds to boot and rejoin Tailscale before ssh oleum-devbox works.
+dev_start()  {
+  aws ec2 start-instances --instance-ids i-0643e4deb2e1db7d0 --region us-east-1
+}
+
+# Check current state:
+dev_describe() {
+  aws ec2 describe-instances --instance-ids i-0643e4deb2e1db7d0 --region us-east-1 --query 'Reservations[0].Instances[0].State.Name' --output text
+}
