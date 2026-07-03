@@ -17,6 +17,7 @@ Personal macOS development environment configuration files, managed via manual s
 | **Zsh** | `zsh/` | `~/.zshrc` | Shell functions, aliases, git-aware prompt, and Claude Code provider configuration |
 | **npm** | `npm/` | `~/.npmrc` | GitHub Packages auth via `$GITHUB_NPM_TOKEN` env var, minimum release age guard |
 | **uv** | `uv/` | `~/.config/uv/uv.toml` | uv global settings (required version, exclude-newer) |
+| **Claude Code** | `claude-code/` | `~/.claude/settings.json`, `~/.claude/statusline.sh` | Settings (plugins, permissions, effort level) and a custom statusline: cwd, git branch, model, output style, context usage (with a fix for models where Claude Code under-reports the context window size) |
 
 ## Setup
 
@@ -43,6 +44,10 @@ ln -s ~/dotfiles/uv/uv.toml ~/.config/uv/uv.toml
 
 # Zsh (copy rather than symlink — merge with your existing .zshrc)
 cat ~/dotfiles/zsh/.zshrc >> ~/.zshrc
+
+# Claude Code (settings.json contains the statusline wiring already)
+ln -s ~/dotfiles/claude-code/.claude/settings.json ~/.claude/settings.json
+ln -s ~/dotfiles/claude-code/.claude/statusline.sh ~/.claude/statusline.sh
 ```
 
 Neovim plugins and LSP servers install automatically on first launch via lazy.nvim and Mason.
@@ -82,3 +87,9 @@ Custom plugins can be added in `nvim/.config/nvim/lua/custom/plugins/` — note 
 - Custom dark status bar with active/inactive window tab styling
 - Mouse support, 100k-line scroll history, Alt-j/k window navigation
 - `focus-events`, `allow-passthrough`, `extended-keys`, and clipboard/true-color `terminal-features` tuned for running multiple concurrent Claude Code sessions across panes, locally and over SSH
+
+## Claude Code Highlights
+
+- Statusline shows cwd, git branch, model, output style, and context window usage
+- Corrects context usage for models where Claude Code under-reports the context window size (see [anthropics/claude-code#63447](https://github.com/anthropics/claude-code/issues/63447))
+- `settings.json` holds enabled plugins, permissions, effort level, and notification channel — account-specific state (auth, session/usage data) lives elsewhere under `~/.claude/` and isn't tracked here
