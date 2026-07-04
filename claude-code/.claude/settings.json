@@ -24,7 +24,9 @@
     "infrastructure-as-code@personal-configs": true,
     "playwright@personal-configs": true,
     "notify@personal-configs": true,
-    "precise-technical-communication@personal-configs": true
+    "precise-technical-communication@personal-configs": true,
+    "core-workflow@personal-configs": true,
+    "clear-writing@personal-configs": true
   },
   "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,

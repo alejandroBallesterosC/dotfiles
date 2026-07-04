@@ -111,3 +111,15 @@ dev_start()  {
 dev_describe() {
   aws ec2 describe-instances --instance-ids i-0643e4deb2e1db7d0 --region us-east-1 --query 'Reservations[0].Instances[0].State.Name' --output text
 }
+
+# OTHER HELPERS
+# Show all gitignored files matching a pattern
+
+show_ignored() {
+  if [ -z "$1" ]; then
+    echo "Usage: show_ignored <pattern>"
+    echo "Example: show_ignored \"*.env\""
+    return 1
+  fi
+  git ls-files --others --ignored --exclude=$1
+}
