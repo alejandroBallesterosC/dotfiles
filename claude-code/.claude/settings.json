@@ -23,12 +23,17 @@
     "pr-review-toolkit@claude-plugins-official": false,
     "infrastructure-as-code@personal-configs": true,
     "playwright@personal-configs": true,
-    "notify@personal-configs": true,
-    "precise-technical-communication@personal-configs": true,
     "core-workflow@personal-configs": true,
-    "clear-writing@personal-configs": true
+    "clear-writing@personal-configs": true,
+    "codebase-hygiene@personal-configs": true,
+    "export-to-obsidian@personal-configs": true,
+    "python-code-quality@personal-configs": true,
+    "precise-technical-communication@personal-configs": true,
+    "conceptual-thought-partner@personal-configs": true
   },
+  "outputStyle": "precise-technical-communication:Precise technical communication",
   "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,
-  "preferredNotifChannel": "ghostty"
+  "preferredNotifChannel": "ghostty",
+  "autoCompactEnabled": true
 }
