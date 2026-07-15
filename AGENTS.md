@@ -1,6 +1,6 @@
 # Dotfiles
 
-Personal macOS development environment configuration. Manages Neovim, Zsh, Tmux, Ghostty, uv, and npm configs via manual symlinks from this repo to their expected locations.
+Personal macOS development environment configuration. Manages Neovim, Zsh, Tmux, Ghostty, uv, and npm configs via symlinks from this repo to their expected locations, created by `install.sh`.
 
 This file is the canonical reference for AI coding agents working in this repo (Claude Code reads it via the `@AGENTS.md` import in `CLAUDE.md`; Codex, Cursor Agents CLI, and similar tools read `AGENTS.md` directly).
 
@@ -8,8 +8,9 @@ This file is the canonical reference for AI coding agents working in this repo (
 
 ```
 dotfiles/
+├── install.sh  → creates the symlinks below + installs ruff via uv   # idempotent setup script
 ├── claude-code/ → ~/.claude/{statusline.sh,settings.json,CLAUDE.md,docs,agents,skills} (symlinks)  # Claude Code global config
-├── ghostty/    → ~/.config/ghostty (symlink)   # Ghostty terminal
+├── ghostty/    → ~/.config/ghostty/config (symlink)  # Ghostty terminal
 ├── npm/        → ~/.npmrc (symlink)            # npm config (auth token via $GITHUB_NPM_TOKEN env var)
 ├── nvim/       → ~/.config/nvim (symlink)      # Neovim - kickstart.nvim based, Lua config
 ├── tmux/       → ~/.tmux.conf (symlink)        # Tmux multiplexer
@@ -17,13 +18,14 @@ dotfiles/
 └── zsh/        → ~/.zshrc (symlink)            # Zsh shell config
 ```
 
-Each tool directory mirrors the target filesystem layout. Configs are deployed via manual symlinks — no stow or install script.
+Each tool directory mirrors the target filesystem layout. Configs are deployed via symlinks created by `install.sh` — no stow. The script is idempotent (existing correct links are left alone; a pre-existing real file or differing link at a target is moved to `<target>.backup.<epoch>`) and also installs `ruff` via `uv tool install ruff`.
 
 ## Key Files
 
 | File | Purpose | Lines |
 |------|---------|-------|
-| `nvim/.config/nvim/init.lua` | Main Neovim config — options, keymaps, 22 plugins via lazy.nvim | 1,018 |
+| `install.sh` | Idempotent setup: creates all config symlinks (with backup of pre-existing targets) and installs `ruff` via `uv tool install ruff` | 86 |
+| `nvim/.config/nvim/init.lua` | Main Neovim config — options, keymaps, 22 plugins via lazy.nvim, `ensure-ruff` autocmd | 1,056 |
 | `zsh/.zshrc` | Shell functions, aliases, prompt, Claude Code provider config | 113 |
 | `tmux/.tmux.conf` | Status bar theme, mouse, focus/clipboard/passthrough settings, Alt-j/k window nav | 39 |
 | `ghostty/.config/ghostty/config` | Font config (JetBrainsMono Nerd Font) and bell settings | 50 |
@@ -38,7 +40,7 @@ Each tool directory mirrors the target filesystem layout. Configs are deployed v
 
 - **Base:** kickstart.nvim (one-time copy, no upstream tracking)
 - **Plugin manager:** lazy.nvim (auto-bootstraps on first launch) — 14 top-level plugins plus dependencies (22 total, pinned in `lazy-lock.json`)
-- **LSP:** Mason auto-installs `pyright` and `ruff` (Python) and `lua-language-server` (Lua), enabled via `vim.lsp.enable`
+- **LSP:** Mason auto-installs `pyright` (Python) and `lua-language-server` (Lua), enabled via `vim.lsp.enable`. The `ruff` server is configured and enabled but excluded from Mason's `ensure_installed` list; the Ruff CLI is installed via `uv tool install ruff` (by `install.sh` and by the `ensure-ruff` `VimEnter` autocmd in `init.lua`) and resolved from `PATH`. Mason installs Ruff from PyPI into a `python3 -m venv`, which requires the `python3-venv`/`ensurepip` system package; the self-contained Ruff binary from uv avoids that dependency.
 - **Formatting:** conform.nvim — Python (`ruff_organize_imports`, `ruff_format`), Lua (`stylua`, installed via Mason as a formatter, not an LSP server), format on save for all filetypes except C/C++
 - **Theme:** Monokai Pro
 - **Leader key:** Space
@@ -84,7 +86,7 @@ Context usage is computed manually from `context_window.total_input_tokens` rath
 
 ## Important Notes
 
-- No install script — symlinks are created manually
+- `install.sh` creates the symlinks and installs `ruff` via uv; it is idempotent and backs up pre-existing targets to `<target>.backup.<epoch>`. No stow.
 - Secrets live in `~/.zshrc.secrets` (not tracked) — referenced via env vars (e.g., `$GITHUB_NPM_TOKEN` in `.npmrc`)
 - No tests or CI for the dotfiles repo itself
 - The `.github/workflows/stylua.yml` is inherited from kickstart.nvim and does not run on this repo

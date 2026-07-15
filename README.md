@@ -21,40 +21,19 @@ Personal macOS development environment configuration files, managed via manual s
 
 ## Setup
 
-Clone and create symlinks:
+Clone and run the install script:
 
 ```bash
 git clone https://github.com/alejandroBallesterosC/dotfiles.git ~/dotfiles
-
-# Neovim
-ln -s ~/dotfiles/nvim/.config/nvim ~/.config/nvim
-
-# Tmux
-ln -s ~/dotfiles/tmux/.tmux.conf ~/.tmux.conf
-
-# Ghostty
-ln -s ~/dotfiles/ghostty/.config/ghostty/config ~/.config/ghostty/config
-
-# npm
-ln -s ~/dotfiles/npm/.npmrc ~/.npmrc
-
-# uv
-mkdir -p ~/.config/uv
-ln -s ~/dotfiles/uv/uv.toml ~/.config/uv/uv.toml
-
-# Zsh (copy rather than symlink — merge with your existing .zshrc)
-cat ~/dotfiles/zsh/.zshrc >> ~/.zshrc
-
-# Claude Code (settings.json contains the statusline wiring already)
-ln -s ~/dotfiles/claude-code/.claude/settings.json ~/.claude/settings.json
-ln -s ~/dotfiles/claude-code/.claude/statusline.sh ~/.claude/statusline.sh
-ln -s ~/dotfiles/claude-code/CLAUDE.md ~/.claude/CLAUDE.md
-ln -s ~/dotfiles/claude-code/docs ~/.claude/docs
-ln -s ~/dotfiles/claude-code/agents ~/.claude/agents
-ln -s ~/dotfiles/claude-code/skills ~/.claude/skills
+cd ~/dotfiles
+./install.sh
 ```
 
-Neovim plugins and LSP servers install automatically on first launch via lazy.nvim and Mason.
+`install.sh` creates all the config symlinks (Neovim, tmux, Ghostty, npm, uv, zsh, and the Claude Code entries under `~/.claude`) and installs `ruff` via `uv tool install ruff`. It is idempotent: symlinks that already point at the repo are left alone, and any pre-existing real file or differing symlink at a target path is moved to `<target>.backup.<epoch>` before the new link is created. Run it again any time after pulling changes.
+
+The script symlinks `~/.zshrc` to `zsh/.zshrc` (backing up an existing file). If you would rather keep your own `~/.zshrc` and merge, skip the script for zsh and append instead: `cat ~/dotfiles/zsh/.zshrc >> ~/.zshrc`.
+
+Neovim plugins and LSP servers install automatically on first launch via lazy.nvim and Mason. `ruff` is not installed through Mason (see [Neovim Highlights](#neovim-highlights)); `install.sh` installs it via uv, and Neovim also installs it on demand via uv if it is missing.
 
 ## Dependencies
 
@@ -63,12 +42,13 @@ Neovim plugins and LSP servers install automatically on first launch via lazy.nv
 - [ripgrep](https://github.com/BurntSushi/ripgrep) (for Telescope live grep)
 - [Ghostty](https://ghostty.org/)
 - [tmux](https://github.com/tmux/tmux)
+- [uv](https://docs.astral.sh/uv/) (installs `ruff` for Neovim; `install.sh` and the editor both call `uv tool install ruff`)
 
 ## Neovim Highlights
 
 - **Theme:** Monokai Pro
 - **Plugin manager:** lazy.nvim (auto-bootstraps)
-- **LSP:** Pyright + Ruff (Python), lua-language-server (Lua) — auto-installed via Mason
+- **LSP:** Pyright + Ruff (Python), lua-language-server (Lua) — Pyright and lua-language-server auto-installed via Mason; the Ruff CLI is installed via `uv tool install ruff` (Mason installs Ruff from PyPI into a python3 venv, which needs the `python3-venv`/`ensurepip` system package — the self-contained Ruff binary from uv avoids that) and resolved from `PATH`
 - **Formatting:** conform.nvim — Ruff for Python, StyLua for Lua
 - **File explorer:** nvim-tree
 - **Fuzzy finder:** Telescope with fzf-native

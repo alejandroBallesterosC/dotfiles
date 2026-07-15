@@ -193,6 +193,34 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function() vim.hl.on_yank() end,
 })
 
+-- Ensure the Ruff CLI is available, installing it with `uv tool install ruff` when missing.
+--  Ruff is a self-contained binary, so this avoids Mason's PyPI-into-a-venv install path
+--  (which needs the python3-venv/ensurepip system package). uv places the `ruff` shim in
+--  ~/.local/bin, which must be on PATH; both the Ruff LSP (`cmd = { 'ruff', 'server' }`) and
+--  conform's ruff formatters resolve the binary from PATH. Runs once per machine: after a
+--  successful install `ruff` is found and the install is skipped on subsequent launches.
+vim.api.nvim_create_autocmd('VimEnter', {
+  desc = 'Install the Ruff CLI via uv when it is not already on PATH',
+  group = vim.api.nvim_create_augroup('ensure-ruff', { clear = true }),
+  callback = function()
+    if vim.fn.executable 'ruff' == 1 then return end
+    if vim.fn.executable 'uv' == 0 then
+      vim.notify('ruff not found and uv is not on PATH; install uv to auto-install ruff', vim.log.levels.WARN)
+      return
+    end
+    vim.notify('Installing ruff via `uv tool install ruff`…', vim.log.levels.INFO)
+    vim.system({ 'uv', 'tool', 'install', 'ruff' }, { text = true }, function(obj)
+      vim.schedule(function()
+        if obj.code == 0 then
+          vim.notify('ruff installed via uv. Restart Neovim or reopen a Python file to use it.', vim.log.levels.INFO)
+        else
+          vim.notify('`uv tool install ruff` failed:\n' .. (obj.stderr or ''), vim.log.levels.ERROR)
+        end
+      end)
+    end)
+  end,
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -748,12 +776,22 @@ require('lazy').setup({
       --    :Mason
       --
       -- You can press `g?` for help in this menu.
-      local ensure_installed = vim.tbl_keys(servers or {})
+      -- Ruff is installed via `uv tool install ruff` (see the ensure-ruff autocmd
+      -- in the Basic Autocommands section) and resolved from PATH, so it is excluded
+      -- from Mason's install list. Mason installs Ruff from PyPI into a python3 venv,
+      -- which requires the python3-venv/ensurepip system package; installing the
+      -- self-contained Ruff binary via uv avoids that dependency. The Ruff LSP server
+      -- is still configured and enabled below.
+      local ensure_installed = {}
+      for name in pairs(servers) do
+        if name ~= 'ruff' then
+          table.insert(ensure_installed, name)
+        end
+      end
       vim.list_extend(ensure_installed, {
         'lua-language-server', -- Lua Language server
         'stylua', -- Used to format Lua code
         'pyright', -- Python LSP
-        'ruff', -- installs the Ruff CLI (with native server)
         -- You can add other tools here that you want Mason to install
       })
 
