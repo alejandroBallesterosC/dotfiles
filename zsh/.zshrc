@@ -16,6 +16,10 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+# Set Neovim as the default system editor
+export EDITOR="nvim"
+export VISUAL="nvim"
+
 # Homebrew SQLite (with extension loading enabled)
 export PATH="/opt/homebrew/opt/sqlite/bin:$PATH"
 export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"

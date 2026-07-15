@@ -8,7 +8,7 @@
       "mcp__pencil"
     ]
   },
-  "model": "sonnet",
+  "model": "opus",
   "worktree": {
     "baseRef": "fresh"
   },
@@ -29,7 +29,8 @@
     "export-to-obsidian@personal-configs": true,
     "python-code-quality@personal-configs": true,
     "precise-technical-communication@personal-configs": true,
-    "conceptual-thought-partner@personal-configs": true
+    "conceptual-thought-partner@personal-configs": true,
+    "export-to-clipboard@personal-configs": true
   },
   "outputStyle": "precise-technical-communication:Precise technical communication",
   "effortLevel": "xhigh",
