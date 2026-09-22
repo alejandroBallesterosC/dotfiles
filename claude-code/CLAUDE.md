@@ -56,10 +56,10 @@ When encountering tool failures (biome, ruff, pytest, etc.):
 Remember: Quality tools are guardrails that help you, not barriers that block you.
 
 # Searching the Internet
-- When searching the internet always spawn 4-5 parallel Claude Sonnet subagents to thoroughly research credible sources that are not stale to prevent bloating your context.
+- When searching the internet always spawn parallel Claude Sonnet subagents to thoroughly research credible sources that are not stale to prevent bloating your context. Split the work by research angle and use as many subagents as there are distinct angles worth covering.
 
 # Exploring Codebases
-- When exploring a codebase/repo always spawn 4-5 parallel Claude Sonnet subagents to thoroughly explore various parts/components in parallel and prevent bloating your context. If the instructions youre following suggest to use a different specialized subagent for codebase exploreation you may also do so.
+- When exploring a codebase/repo always spawn parallel Claude Sonnet subagents to thoroughly explore various parts/components in parallel and prevent bloating your context. Split the work by component or concern and use as many subagents as that split calls for. If the instructions youre following suggest to use a different specialized subagent for codebase exploreation you may also do so.
 
 # Other things
 

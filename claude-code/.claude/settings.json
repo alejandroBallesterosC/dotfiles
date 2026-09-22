@@ -6,7 +6,8 @@
   "permissions": {
     "allow": [
       "mcp__pencil"
-    ]
+    ],
+    "defaultMode": "dontAsk"
   },
   "model": "opus",
   "worktree": {
@@ -18,23 +19,35 @@
   },
   "enabledPlugins": {
     "code-review@claude-plugins-official": false,
-    "frontend-design@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": false,
     "agent-sdk-dev@claude-plugins-official": false,
     "pr-review-toolkit@claude-plugins-official": false,
     "infrastructure-as-code@personal-configs": true,
-    "playwright@personal-configs": true,
+    "playwright@personal-configs": false,
     "core-workflow@personal-configs": true,
     "clear-writing@personal-configs": true,
-    "codebase-hygiene@personal-configs": true,
-    "export-to-obsidian@personal-configs": true,
-    "python-code-quality@personal-configs": true,
+    "python-code-quality@personal-configs": false,
     "precise-technical-communication@personal-configs": true,
-    "conceptual-thought-partner@personal-configs": true,
-    "export-to-clipboard@personal-configs": true
+    "conceptual-thought-partner@personal-configs": false,
+    "export-to-clipboard@personal-configs": true,
+    "pure-legend@pure-legend": true
+  },
+  "extraKnownMarketplaces": {
+    "pure-legend": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/Oleum-AI/oleum-pure-legend-docs.git"
+      },
+      "autoUpdate": true
+    }
   },
   "outputStyle": "precise-technical-communication:Precise technical communication",
   "effortLevel": "xhigh",
+  "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
+  "editorMode": "normal",
   "preferredNotifChannel": "ghostty",
-  "autoCompactEnabled": true
+  "autoCompactEnabled": true,
+  "switchModelsOnFlag": true,
+  "useAutoModeDuringPlan": true
 }
