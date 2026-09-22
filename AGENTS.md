@@ -26,13 +26,13 @@ Each tool directory mirrors the target filesystem layout. Configs are deployed v
 |------|---------|-------|
 | `install.sh` | Idempotent setup: creates all config symlinks (with backup of pre-existing targets) and installs `ruff` via `uv tool install ruff` | 86 |
 | `nvim/.config/nvim/init.lua` | Main Neovim config — options, keymaps, 22 plugins via lazy.nvim, `ensure-ruff` autocmd | 1,056 |
-| `zsh/.zshrc` | Shell functions, aliases, prompt, Claude Code provider config | 113 |
+| `zsh/.zshrc` | Shell functions, aliases, prompt, Claude Code provider config | 138 |
 | `tmux/.tmux.conf` | Status bar theme, mouse, focus/clipboard/passthrough settings, Alt-j/k window nav | 39 |
 | `ghostty/.config/ghostty/config` | Font config (JetBrainsMono Nerd Font) and bell settings | 50 |
 | `npm/.npmrc` | GitHub Packages auth via env var, minimum release age guard | 2 |
 | `uv/uv.toml` | uv global settings (required-version, exclude-newer) | 2 |
-| `claude-code/.claude/statusline.sh` | Claude Code statusline: cwd, git branch, model, output style, context usage — corrects `context_window_size` for models Claude Code under-reports (see below) | 45 |
-| `claude-code/.claude/settings.json` | Claude Code settings: statusline wiring, enabled plugins, permissions, effort level, notification channel | 32 |
+| `claude-code/.claude/statusline.sh` | Claude Code statusline: cwd, git branch, model, output style, context usage — corrects `context_window_size` for models Claude Code under-reports (see below) | 50 |
+| `claude-code/.claude/settings.json` | Claude Code settings: statusline wiring, plugin marketplaces and enabled plugins, permissions, effort level, notification channel | 53 |
 | `claude-code/CLAUDE.md` | Global instructions applied to every Claude Code session (writing style, TDD process, uv/Python conventions) | 77 |
 | `claude-code/docs/*.md` | Referenced from `CLAUDE.md` — Python, uv, and Docker+uv best-practice docs | — |
 
@@ -74,7 +74,7 @@ Key content:
 
 `claude-code/.claude/settings.json` and `claude-code/.claude/statusline.sh` are symlinked to `~/.claude/settings.json` and `~/.claude/statusline.sh` respectively. `settings.json`'s `statusLine.command` points at the symlinked script path, so both need to exist for the statusline to render.
 
-`settings.json` covers statusline wiring, enabled plugins, permissions, effort level, and notification channel — anything account-specific (auth, usage/session state) lives elsewhere under `~/.claude/` and is not tracked here.
+`settings.json` covers statusline wiring, plugin marketplaces (`extraKnownMarketplaces`) and which plugins are enabled, permissions, effort level, and notification channel — anything account-specific (auth, usage/session state) lives elsewhere under `~/.claude/` and is not tracked here.
 
 The statusline shows: current dir (`~` shortened), git branch, model display name, output style (if non-default), and context window usage (`ctx: N% (Nk left)`).
 
@@ -91,7 +91,7 @@ Context usage is computed manually from `context_window.total_input_tokens` rath
 - No tests or CI for the dotfiles repo itself
 - The `.github/workflows/stylua.yml` is inherited from kickstart.nvim and does not run on this repo
 - Ghostty config is minimal (font family and bell settings only)
-- Git remote is named `dotfiles` (not `origin`)
+- The git remote name is per-clone local config, not a property of the repo — run `git remote -v` before pushing rather than assuming `origin` (this checkout uses `origin`)
 
 ## Common Tasks
 
